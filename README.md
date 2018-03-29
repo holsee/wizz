@@ -2,6 +2,8 @@
 
 An app demontrating how to use cowboy websockets via Plug in elixir.
 
+*Updated for Cowboy 2.2.x* - See: branch cowboy-1.1.x for Cowboy 1 version
+
 ## Configuration
 
 ### Set Port
