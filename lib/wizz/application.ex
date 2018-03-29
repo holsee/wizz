@@ -4,6 +4,8 @@ defmodule Wizz.Application do
 
   use Application
 
+  require Logger
+
   def start(_type, _args) do
     children = [
       Plug.Adapters.Cowboy2.child_spec(
@@ -15,6 +17,8 @@ defmodule Wizz.Application do
         ]
       )
     ]
+
+    Logger.info("Application started.")
 
     opts = [strategy: :one_for_one, name: Wizz.Supervisor]
     Supervisor.start_link(children, opts)

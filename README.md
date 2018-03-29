@@ -2,6 +2,8 @@
 
 An app demontrating how to use cowboy websockets via Plug in elixir.
 
+*Updated for Cowboy 2.2.x* - See: branch cowboy-1.1.x for Cowboy 1 version
+
 ## Configuration
 
 ### Set Port
@@ -47,12 +49,14 @@ Debug Log showing `SocketHandler` process spawned:
 00:00:00.000 pid=<0.324.0> module=Wizz.SocketHandler [debug] websocket_init :tcp, []
 ```
 
+If we establish another connection:
 ```
-{:ok, client} = Wizz.Client.start_link("http://localhost:1447/ws")
+{:ok, c} = Wizz.Client.start_link("http://localhost:1447/ws")
 ```
 
+Another process is spawned to handle this connection:
 ```
-16:23:33.041 pid=<0.300.0> module=Wizz.SocketHandler [debug] websocket_init :tcp, []
+00:00:00.157 pid=<0.289.0> module=Wizz.SocketHandler [debug] init []
 ```
 
 Send `ping`:
@@ -83,11 +87,11 @@ Wizz.Client.send(c, "wow!")
 
 _Client Log_: Sending `"wow!"`
 ```
-16:23:51.547 pid=<0.295.0> module=Wizz.Client [debug] Sending text frame with payload: wow!
+00:00:00.547 pid=<0.295.0> module=Wizz.Client [debug] Sending text frame with payload: wow!
 ```
 
 _Server Log_: received `"wow!"`, no reply
 ```
-16:23:51.547 pid=<0.300.0> module=Wizz.SocketHandler [debug] received: wow!
+00:00:00.548 pid=<0.300.0> module=Wizz.SocketHandler [debug] received: wow!
 ```
 
