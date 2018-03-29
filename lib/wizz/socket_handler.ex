@@ -1,7 +1,7 @@
 defmodule Wizz.SocketHandler do
-  @behaviour :cowboy_websocket_handler
-
   require Logger
+
+  # See: https://ninenines.eu/docs/en/cowboy/2.2/manual/cowboy_websocket/
 
   def init(_, _req, _opts) do
     {:upgrade, :protocol, :cowboy_websocket}
@@ -11,31 +11,31 @@ defmodule Wizz.SocketHandler do
   @timeout 60000
 
   # Called on websocket connection initialization.
-  def websocket_init(_type, req, _opts) do
-    Logger.debug("websocket_init #{inspect(_type)}, #{inspect(_opts)}")
-    state = %{}
-    {:ok, req, state, @timeout}
+  def init(req, state) do
+    Logger.debug("init #{inspect(state)}")
+    {:cowboy_websocket, req, state}
   end
 
   # Handle 'ping' messages from the browser - reply
-  def websocket_handle({:text, "ping"}, req, state) do
+  def websocket_handle({:text, "ping"}, state) do
     Logger.debug("received: ping; sending: pong")
-    {:reply, {:text, "pong"}, req, state}
+    {:reply, {:text, "pong"}, state}
   end
 
   # Handle other messages from the browser - don't reply
-  def websocket_handle({:text, message}, req, state) do
+  def websocket_handle({:text, message}, state) do
     Logger.debug("received: #{message}")
-    {:ok, req, state}
+    {:ok, state}
   end
 
   # Format and forward elixir messages to client
-  def websocket_info(message, req, state) do
-    {:reply, {:text, message}, req, state}
+  def websocket_info(message, state) do
+    {:reply, {:text, message}, state}
   end
 
   # No matter why we terminate, remove all of this pids subscriptions
-  def websocket_terminate(_reason, _req, _state) do
+  def terminate(_reason, _partial_req, _state) do
+    Logger.debug("terminated!")
     :ok
   end
 end

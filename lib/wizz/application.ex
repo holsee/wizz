@@ -6,7 +6,7 @@ defmodule Wizz.Application do
 
   def start(_type, _args) do
     children = [
-      Plug.Adapters.Cowboy.child_spec(
+      Plug.Adapters.Cowboy2.child_spec(
         scheme: :http,
         plug: Wizz.Router,
         options: [
@@ -25,7 +25,7 @@ defmodule Wizz.Application do
       {:_,
        [
          {"/ws", Wizz.SocketHandler, []},
-         {:_, Plug.Adapters.Cowboy.Handler, {Wizz.Router, []}}
+         {:_, Plug.Adapters.Cowboy2.Handler, {Wizz.Router, []}}
        ]}
     ]
   end

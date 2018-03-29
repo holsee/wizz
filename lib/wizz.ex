@@ -5,11 +5,11 @@ defmodule Wizz do
     require Logger
 
     def ping(client) do
-      WebSockex.cast client, {:send, {:text, "ping"}}
+      WebSockex.cast(client, {:send, {:text, "ping"}})
     end
 
     def send(client, msg) when is_binary(msg) do
-      WebSockex.cast client, {:send, {:text, msg}}
+      WebSockex.cast(client, {:send, {:text, msg}})
     end
 
     def start_link() do

@@ -23,7 +23,7 @@ defmodule Wizz.MixProject do
   defp deps do
     [
       {:plug, "~> 1.5"},
-      {:cowboy, "~> 1.1"},
+      {:cowboy, "~> 2.2"},
       # Only required for the Client
       {:websockex, "~> 0.4"}
     ]
