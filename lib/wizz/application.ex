@@ -9,7 +9,7 @@ defmodule Wizz.Application do
   def start(_type, _args) do
     children = [
       Plug.Adapters.Cowboy2.child_spec(
-        scheme: :http,
+        scheme: Application.get_env(@app, :scheme),
         plug: Wizz.Router,
         options: [
           port: Application.get_env(@app, :port),

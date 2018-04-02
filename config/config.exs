@@ -4,4 +4,4 @@ use Mix.Config
 
 config :logger, :console, metadata: [:request_id, :pid, :module]
 
-config :wizz, port: 1447
+config :wizz, port: 1447, scheme: :http

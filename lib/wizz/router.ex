@@ -1,6 +1,7 @@
 defmodule Wizz.Router do
   use Plug.Router
 
+  plug(Plug.SSL)
   plug(Plug.Logger)
   plug(Plug.RequestId)
   plug(:match)
