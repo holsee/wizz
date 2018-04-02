@@ -7,14 +7,12 @@ defmodule Wizz.Application do
   require Logger
 
   def start(_type, _args) do
+    cowboy_opts = Application.get_env(@app, :cowboy) |> IO.inspect
     children = [
       Plug.Adapters.Cowboy2.child_spec(
-        scheme: Application.get_env(@app, :scheme),
+        scheme: Keyword.get(cowboy_opts, :scheme),
         plug: Wizz.Router,
-        options: [
-          port: Application.get_env(@app, :port),
-          dispatch: dispatch()
-        ]
+        options: cowboy_opts
       )
     ]
 
@@ -24,13 +22,4 @@ defmodule Wizz.Application do
     Supervisor.start_link(children, opts)
   end
 
-  defp dispatch do
-    [
-      {:_,
-       [
-         {"/ws", Wizz.SocketHandler, []},
-         {:_, Plug.Adapters.Cowboy2.Handler, {Wizz.Router, []}}
-       ]}
-    ]
-  end
 end
