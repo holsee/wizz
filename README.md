@@ -1,20 +1,46 @@
 # Wizz
 
-An app demontrating how to use cowboy websockets via Plug in elixir.
+Demo App to showcase using Cowboy HTTP(S) and WebSockets in Elixir & Plug.
 
-*Updated for Cowboy 2.2.x* - See: branch cowboy-1.1.x for Cowboy 1 version
+## Changelog
+
+* Refer to tag 1.1.x / branch cowboy-1.1.x for Cowboy 1 version.
+* Updated to include configuring cowboy to use secure transport.
 
 ## Configuration
 
-### Set Port
+### Set Transport Scheme
 
-config/config.exs
-```
+Edit `config/config.exs` and set scheme to `:http` or `:https`
+``` elixir
 config :wizz,
-  port: 1447
+  scheme: :http | :https
+```
+
+## Run Server
+
+```
+$ iex -S mix
 ```
 
 ## Examples
+
+### HTTPS Endpoint
+
+Ensure `scheme` is set to `:https`.
+
+I followed http://ezgr.net/increasing-security-erlang-ssl-cowboy/ when selecting
+the secure transport options for cowboy.
+
+Request `/ping` endpoint over `https://`:
+```
+$ curl https://localhost:1447/ping --cacert "./priv/ssl/cacert.crt"
+pong
+```
+
+### Secure WebSocket
+
+TODO - Update `Wizz.Client` to support `wss://`
 
 ### HTTP Endpoint
 

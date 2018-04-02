@@ -7,19 +7,21 @@ defmodule Wizz.Application do
   require Logger
 
   def start(_type, _args) do
-    cowboy_opts = Application.get_env(@app, :cowboy) |> IO.inspect
+
+    scheme = Application.get_env(@app, :scheme)
+    options = Application.get_env(@app, :cowboy)
+
     children = [
       Plug.Adapters.Cowboy2.child_spec(
-        scheme: Keyword.get(cowboy_opts, :scheme),
+        scheme: scheme,
         plug: Wizz.Router,
-        options: cowboy_opts
+        options: options[scheme]
       )
     ]
 
-    Logger.info("Application started.")
+    Logger.info("Application started, using #{scheme}.")
 
     opts = [strategy: :one_for_one, name: Wizz.Supervisor]
     Supervisor.start_link(children, opts)
   end
-
 end
