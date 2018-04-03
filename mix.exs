@@ -25,7 +25,7 @@ defmodule Wizz.MixProject do
       {:plug, "~> 1.5"},
       {:cowboy, "~> 2.2"},
       # Only required for the Client
-      {:websockex, "~> 0.4"}
+      {:socket, "~> 0.3.13"}
     ]
   end
 end

@@ -2,10 +2,13 @@
 
 Demo App to showcase using Cowboy HTTP(S) and WebSockets in Elixir & Plug.
 
-## Changelog
+## Change Log
 
 * Refer to tag 1.1.x / branch cowboy-1.1.x for Cowboy 1 version.
 * Updated to include configuring cowboy to use secure transport.
+* Implemented secure transport for WebSockets and HTTP handler.
+* Swapped `WebSockex` for `Socket` in order to ensure secure transport.
+* Added Generic Server wrapper `WebSocketClient` around `Socket`.
 
 ## Configuration
 
@@ -40,7 +43,11 @@ pong
 
 ### Secure WebSocket
 
-TODO - Update `Wizz.Client` to support `wss://`
+Same as `HTTP` examples below, except with `https://` in protocol in URI.
+
+Note that it is also, it is possible it use `Wizz.Client.start_link/0` which
+will automatically compute the websocket URI endpoint / port / scheme based
+on the server configuration.
 
 ### HTTP Endpoint
 
@@ -87,12 +94,12 @@ Another process is spawned to handle this connection:
 
 Send `ping`:
 ``` elixir
-Wizz.Client.ping(c)
+Wizz.Client.send(c, {:text, "ping"})
 ```
 
 _Client Log_: send `ping` message (expect `pong`):
 ```
-00:00:00.624 pid=<0.295.0> module=Wizz.Client [debug] Sending text frame with payload: ping
+00:00:00.624 pid=<0.295.0> module=WebSocketClient [debug] Sending text frame with payload: ping
 ```
 
 _Server Log_: `ping` received, sending `pong`:
@@ -108,7 +115,7 @@ _Client Log_: received `pong`
 Send arbitrary message:
 
 ``` elixir
-Wizz.Client.send(c, "wow!")
+Wizz.Client.send(c, {:text, "wow!"})
 ```
 
 _Client Log_: Sending `"wow!"`

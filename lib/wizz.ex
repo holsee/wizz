@@ -1,34 +1,40 @@
 defmodule Wizz do
   defmodule Client do
-    use WebSockex
+    use WebSocketClient
 
     require Logger
 
-    def ping(client) do
-      WebSockex.cast(client, {:send, {:text, "ping"}})
-    end
+    ##
+    # API
 
-    def send(client, msg) when is_binary(msg) do
-      WebSockex.cast(client, {:send, {:text, msg}})
-    end
-
+    @doc """
+    Assumes local connection, dynamically determining port and scheme
+    from the server configuration.
+    """
     def start_link() do
-      port = Application.get_env(:wizz, :port)
-      start_link("http://localhost:#{port}/ws")
+      scheme = Application.get_env(:wizz, :scheme)
+      conf = Application.get_env(:wizz, :cowboy)
+      port = Keyword.get(conf[scheme], :port)
+      uri = "#{scheme}://localhost:#{port}/ws" |> IO.inspect()
+      start_link(uri)
     end
 
-    def start_link(url) do
-      WebSockex.start_link(url, __MODULE__, self())
+    ##
+    # Callbacks
+
+    def handle_packet({:pong, bin}, state) do
+      Logger.debug("Received pong with Message #{bin}")
+      {:noreply, state}
     end
 
-    def handle_frame({type, msg}, state) do
+    def handle_packet({type, msg}, state) do
       Logger.debug("Received Message - Type: #{inspect(type)} -- Message: #{inspect(msg)}")
-      {:ok, state}
+      {:noreply, state}
     end
 
-    def handle_cast({:send, {type, msg} = frame}, state) do
-      Logger.debug("Sending #{type} frame with payload: #{msg}")
-      {:reply, frame, state}
+    def handle_packet({:close, reason, msg}, state) do
+      Logger.info("Received {:close, #{reason}, #{msg}} - stopping client.")
+      {:stop, reason, state}
     end
   end
 end

@@ -7,7 +7,6 @@ defmodule Wizz.Application do
   require Logger
 
   def start(_type, _args) do
-
     scheme = Application.get_env(@app, :scheme)
     options = Application.get_env(@app, :cowboy)
 
